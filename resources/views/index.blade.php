@@ -1,4 +1,3 @@
-
 @extends('layouts.app')
 @section('content')
     <header class="masthead">
@@ -17,6 +16,15 @@
     </header>
     <section class="page-section bg-secondary" id="registration">
         <div class="container px-4 px-lg-5">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             @if (session('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     {{ session('success') }}
@@ -46,8 +54,8 @@
                 </div>
                 <!-- Email address input-->
                 <div class="form-floating mb-3">
-                    <input class="form-control" id="email" type="email" name="email"
-                        placeholder="name@example.com" data-sb-validations="required,email" />
+                    <input class="form-control" id="email" type="email" name="email" placeholder="name@example.com"
+                        data-sb-validations="required,email" />
                     <label for="email">Email address</label>
                     <div class="invalid-feedback" data-sb-feedback="email:required">An email is required.</div>
                     <div class="invalid-feedback" data-sb-feedback="email:email">Email is not valid.</div>
