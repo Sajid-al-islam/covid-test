@@ -11,8 +11,18 @@ class Registration extends Model
 
     protected $guarded = [];
 
+    const STATUS_NOT_REGISTERED = "Not registered";
+    const STATUS_NOT_SCHEDULED = "Not Scheduled";
+    const STATUS_SCHEDULED = "Scheduled";
+    const STATUS_VACINATED = "Vaccinated";
+
     public function vaccineCenter()
     {
         return $this->belongsTo(VaccineCenter::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

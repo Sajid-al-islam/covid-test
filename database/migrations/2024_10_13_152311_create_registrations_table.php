@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('registrations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
-            $table->foreignId('vaccine_center_id');
+            $table->foreignId('vaccine_center_id')->default(0);
             $table->date('scheduled_date')->nullable();
             $table->enum('status', ['Not registered', 'Not scheduled', 'Scheduled', 'Vaccinated'])->default('Not registered');
             $table->timestamps();
