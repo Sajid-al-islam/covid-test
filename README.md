@@ -130,15 +130,17 @@ To test the system, you can:
 - **Optimization**: 
   - Index frequently queried fields like `scheduled_date` in the `registrations` table to optimize performance.
   - Use caching for frequently accessed data such as available vaccine centers.
+  - add easily indexable column such as `scheduled_date_int`, which should be easy to index and it will make the query execution much faster
 - **Scaling**: 
   - Consider using queue workers for sending emails and notifications asynchronously to improve performance when the number of users grows.
-- **SMS Integration**: If required in the future, Laravel provides an easy way to integrate with services like Twilio for SMS notifications. You can extend the notification logic in the `VaccinationScheduled` mailable class and use Laravel's `Notification` system to send both email and SMS.
+- **SMS Integration**: If required in the future, I have created a Notification service, where SMS
+  sending can be implemented easily.
 
 ---
 
 ### Future Enhancements
 
-1. **SMS Notifications**: If SMS notifications are needed in the future, we can utilize Laravel's `Notification` system to extend the current notification setup.
+1. **SMS Notifications**: If SMS notifications are needed in the future, I have created a Notification service, where SMS sending can be implemented easily.
 2. **Performance Optimizations**: Implement database indexes and caching to improve performance under heavy loads.
 
 ---

@@ -78,7 +78,7 @@
                 <div class="form-floating mb-3">
                     <select name="vaccine_center_id" id="vaccine_center_id" class="form-control">
                         @foreach ($centers as $center)
-                            <option value="{{ $center->id }}">{{ $center->name }}</option>
+                            <option value="{{ $center->id }}">{{ $center->name }} - {{ $center->address }}</option>
                         @endforeach
                     </select>
                     <label for="vaccine_center_id">Vacination center</label>

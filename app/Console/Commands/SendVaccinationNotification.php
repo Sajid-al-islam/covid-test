@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Contracts\AppContracts;
+use App\Http\Services\NotificationService;
 use App\Mail\VaccinationScheduled;
 use App\Models\Registration;
 use Illuminate\Console\Command;
@@ -34,7 +36,12 @@ class SendVaccinationNotification extends Command
                                       ->with(['user'])->get();
             foreach ($registrations as $registration) {
                 if(!empty($registration->user->email)) {
-                    Mail::to($registration->user->email)->send(new VaccinationScheduled($registration));
+
+                    (new NotificationService(AppContracts::NOTIFICATION_MAIL, AppContracts::NOTIFICATION_VACINATION_SCHEDULE, $registration));
+                    // Mail::to($registration->user->email)->send(new VaccinationScheduled($registration));
+                    if(env('SMS_NOTIFICATION_ENABLED')) {
+                        (new NotificationService(AppContracts::NOTIFICATION_SMS, AppContracts::NOTIFICATION_VACINATION_SCHEDULE, $registration));
+                    }
                 }
             }
         } catch (\Throwable $th) {

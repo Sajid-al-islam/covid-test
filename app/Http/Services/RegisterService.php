@@ -2,6 +2,7 @@
 
 namespace App\Http\Services;
 
+use App\Contracts\AppContracts;
 use App\Models\Registration;
 use App\Models\User;
 use App\Models\VaccineCenter;
@@ -49,7 +50,7 @@ class RegisterService
             $scheduledDate = $this->getNextAvailableDate($center);
 
 
-            $status = $scheduledDate ? Registration::STATUS_SCHEDULED : Registration::STATUS_NOT_SCHEDULED;
+            $status = $scheduledDate ? AppContracts::STATUS_SCHEDULED : AppContracts::STATUS_NOT_SCHEDULED;
 
             $registration = Registration::create([
                 'user_id' => $user->id,
@@ -59,7 +60,7 @@ class RegisterService
             ]);
 
 
-            if ($status === Registration::STATUS_SCHEDULED) {
+            if ($status === AppContracts::STATUS_SCHEDULED) {
                 $return_status = 'success';
                 $return_message = 'You have been successfully registered and scheduled for vaccination on ' . $scheduledDate->toFormattedDateString() . '.';
             } else {

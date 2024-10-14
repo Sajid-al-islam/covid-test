@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Contracts\AppContracts;
+use App\Http\Services\NotificationService;
 use App\Http\Services\RegisterService;
 use App\Mail\VaccinationScheduled;
 use App\Models\Registration;
@@ -32,7 +34,7 @@ class UpdateScheduleDate extends Command
     public function handle()
     {
         try {
-            $unscheduledUsers = Registration::where('status', Registration::STATUS_NOT_SCHEDULED)->with(['user'])->get();
+            $unscheduledUsers = Registration::where('status', AppContracts::STATUS_NOT_SCHEDULED)->with(['user'])->get();
 
             foreach ($unscheduledUsers as $registration) {
                 $center = VaccineCenter::findOrfail($registration->vaccine_center_id);
@@ -42,10 +44,14 @@ class UpdateScheduleDate extends Command
                     if ($nextAvailableDate) {
                         $registration->update([
                             'scheduled_date' => $nextAvailableDate,
-                            'status' => Registration::STATUS_SCHEDULED,
+                            'status' => AppContracts::STATUS_SCHEDULED,
                         ]);
                         if(!empty($registration->user->email)) {
-                            Mail::to($registration->user->email)->send(new VaccinationScheduled($registration));
+                            (new NotificationService(AppContracts::NOTIFICATION_MAIL, AppContracts::NOTIFICATION_UPDATE_SCHEDULE, $registration));
+                            // Mail::to($registration->user->email)->send(new VaccinationScheduled($registration));
+                            if(env('SMS_NOTIFICATION_ENABLED')) {
+                                (new NotificationService(AppContracts::NOTIFICATION_SMS, AppContracts::NOTIFICATION_UPDATE_SCHEDULE, $registration));
+                            }
                         }
                     }
                 }

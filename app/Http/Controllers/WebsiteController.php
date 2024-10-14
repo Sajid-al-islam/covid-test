@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Contracts\AppContracts;
 use App\Models\Registration;
 use App\Models\User;
 use App\Models\VaccineCenter;
@@ -26,23 +27,30 @@ class WebsiteController extends Controller
         $result = [];
 
         if (!$user) {
-            $result = ['status' => Registration::STATUS_NOT_REGISTERED];
+            $result = ['status' => AppContracts::STATUS_NOT_REGISTERED];
         } else {
             $registration = $user->registration;
 
             if (!$registration) {
-                $result = ['status' => Registration::STATUS_NOT_SCHEDULED];
+                $result = ['status' => AppContracts::STATUS_NOT_SCHEDULED];
             } else {
-                if ($registration->status == Registration::STATUS_SCHEDULED) {
+                if ($registration->status == AppContracts::STATUS_SCHEDULED) {
                     $result = [
-                        'status' => 'Scheduled',
+                        'status' => AppContracts::STATUS_SCHEDULED,
                         'date' => $registration->scheduled_date
                     ];
                 }
 
-                if ($registration->scheduled_date < now()) {
-                    $registration->update(['status' => Registration::STATUS_VACINATED]);
-                    $result = ['status' => Registration::STATUS_VACINATED];
+                if ($registration->status == AppContracts::STATUS_VACINATED) {
+                    $result = [
+                        'status' => AppContracts::STATUS_VACINATED,
+                        'date' => $registration->scheduled_date
+                    ];
+                }
+
+                if ($registration->scheduled_date < today()) {
+                    $registration->update(['status' => AppContracts::STATUS_VACINATED]);
+                    $result = ['status' => AppContracts::STATUS_VACINATED];
                 }
             }
         }
