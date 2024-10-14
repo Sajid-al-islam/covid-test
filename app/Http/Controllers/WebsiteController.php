@@ -6,6 +6,7 @@ use App\Contracts\AppContracts;
 use App\Models\Registration;
 use App\Models\User;
 use App\Models\VaccineCenter;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class WebsiteController extends Controller
@@ -48,7 +49,7 @@ class WebsiteController extends Controller
                     ];
                 }
 
-                if ($registration->scheduled_date < today()) {
+                if (Carbon::parse($registration->scheduled_date)->isBefore(today())) {
                     $registration->update(['status' => AppContracts::STATUS_VACINATED]);
                     $result = ['status' => AppContracts::STATUS_VACINATED];
                 }
